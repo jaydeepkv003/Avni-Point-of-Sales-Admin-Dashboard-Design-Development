@@ -1,0 +1,34 @@
+<form #form="ngForm" [formGroup]="formService.dyForm" (submit)="onSubmit($event)"
+  *ngIf="formService.dyFormConfig && formService.dyFormConfig.properties" class="modal-content no-border"
+  [ngClass]="isPopup ? 'h-100' : ''">
+  <div class="modal-header" [ngClass]="isPopup ? 'stickey-top' : ''">
+    <h4 class="modal-title pull-left" *ngIf="formService.dyFormConfig">{{ formService.dyFormConfig.title | translate}}
+    </h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="onClose()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div *ngFor="let field of formService.dyFormConfig.properties"
+      [hidden]="field.isHidden || (formService.dyFormConfig.isSubForm && field.notInSubForm )">
+      <span dyFormField *ngIf="!field.rebuildControl" [field]="field" [form]="form" [group]="formService.dyForm"></span>
+    </div>
+    <!-- {{formService.dyForm.value | json}} -->
+  </div>
+  <div class="modal-footer" [ngClass]="isPopup ? 'stickey-bottom' : ''">
+    <button type="submit" class="btn btn-primary float-right"
+      *ngIf="formService.dyFormConfig.isSave">{{ 'SAVE' | translate}}</button>
+
+    <button type="submit" class="btn btn-primary float-right"
+      *ngIf="formService.dyFormConfig.isSearch">{{ 'SEARCH' | translate}}</button>
+
+    <button type="submit" class="btn btn-primary float-right"
+      *ngIf="formService.dyFormConfig.isExport">{{ 'EXPORT' | translate}}</button>
+
+    <button type="button" class="btn btn-outline-primary float-right" (click)="onReset()"
+      *ngIf="formService.dyFormConfig.isReset">{{'RESET' | translate }}</button>
+
+    <div *ngFor="let field of formService.dyFormConfig.buttons" dyFormField [field]="field" [form]="form"
+      [group]="formService.dyForm" [hidden]="field.isHidden"></div>
+  </div>
+</form>

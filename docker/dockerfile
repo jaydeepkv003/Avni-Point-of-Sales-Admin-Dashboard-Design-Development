@@ -1,0 +1,20 @@
+# STEP 1 build static website
+# Create app directory
+# Install app dependencies
+# Copy project files into the docker image
+# STEP 2 build a small nginx image with static website
+## Remove default nginx website
+## From 'builder' copy website to default nginx public folder
+FROM node:alpine as builder
+RUN apk update && apk add --no-cache make git
+WORKDIR /app
+COPY package.json package-lock.json /app/
+RUN cd /app && npm install
+COPY .  /app
+RUN cd /app && npm run build
+FROM nginx:alpine
+RUN rm -rf /usr/share/nginx/html/*
+COPY config/default.conf /etc/nginx/conf.d/
+COPY --from=builder /app/dist /usr/share/nginx/html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]

@@ -1,0 +1,17 @@
+<h6 *ngIf="formService.dyFormConfig && formService.dyFormConfig.title" class="mb-4">
+  {{ formService.dyFormConfig.title | translate }}
+</h6>
+<form #form="ngForm" id="ngFormSimple" [formGroup]="formService.dyForm" class="full-width" (submit)="onSubmit($event)"
+  *ngIf="formService.dyFormConfig && formService.dyFormConfig.properties">
+  <div *ngFor="let field of formService.dyFormConfig.properties" [hidden]="field.isHidden">
+    <span dyFormField *ngIf="!field.rebuildControl" [field]="field" [form]="form" [group]="formService.dyForm"></span>
+  </div>
+  <br />
+  <span *ngFor="let field of formService.dyFormConfig.buttons" dyFormField [field]="field" [group]="formService.dyForm"
+    [hidden]="field.isHidden"></span>
+
+  <button type="button" class="btn btn-outline-primary float-right" form="ngFormSimple" (click)="onReset()"
+    *ngIf="formService.dyFormConfig.isReset">{{'RESET' | translate }}</button>
+  <button type="submit" class="btn btn-primary mr-1 float-right" form="ngFormSimple"
+    *ngIf="formService.dyFormConfig.isSave">{{ 'SAVE' | translate}}</button>
+</form>
